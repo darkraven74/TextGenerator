@@ -34,7 +34,6 @@ text_generator::text_generator(std::string input_file)
                 }
                 words_number++;
             }
-
         }
     }
 }
