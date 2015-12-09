@@ -17,6 +17,7 @@ public:
 
 private:
     std::map<std::string, long long> words_frequency;
+    std::map<double, std::string> words_probability;
     long long words_number;
 };
 

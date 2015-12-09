@@ -36,18 +36,25 @@ text_generator::text_generator(std::string input_file)
             }
         }
     }
+    double cur_border = 0;
+    for (auto &map_entry : words_frequency) {
+        std::string word = map_entry.first;
+        long long frequency = map_entry.second;
+        double probability = ((double) frequency) / words_number;
+        words_probability.insert(std::pair<double, std::string>(cur_border + probability, word));
+        cur_border += probability;
+    }
 }
 std::vector<std::string> text_generator::generate(int output_size)
 {
     std::vector<std::string> answer;
-    for (auto &map_entry : words_frequency) {
-        std::string word = map_entry.first;
-        long long frequency = map_entry.second;
-        long long answer_frequency = (long long) floor(1.0 * frequency / words_number * output_size);
-        for (int i = 0; i < answer_frequency; i++) {
-            answer.push_back(word);
-        }
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_real_distribution<> distribution(0.0, 1.0);
+    for (int i = 0; i < output_size; i++) {
+        double random_value = distribution(generator);
+        auto iter = words_probability.lower_bound(random_value);
+        answer.push_back(iter->second);
     }
-    std::random_shuffle(answer.begin(), answer.end());
     return answer;
 }
